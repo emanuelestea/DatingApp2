@@ -32,6 +32,7 @@ namespace DatingApp2
         {
 
             services.AddControllers();
+            services.AddCors();
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
@@ -55,6 +56,9 @@ namespace DatingApp2
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //importante metterlo tra il routing e auth
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200")); 
 
             app.UseAuthorization();
 
