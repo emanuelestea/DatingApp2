@@ -13,6 +13,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using DatingApp2.Data;
+using DatingApp2.Interfaces;
+using DatingApp2.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using DatingApp2.Extensions;
 
 namespace DatingApp2
 {
@@ -30,13 +36,10 @@ namespace DatingApp2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddApplicationServices(_config);
             services.AddControllers();
             services.AddCors();
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
+            services.AddIdentityServices(_config);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DatingApp2", Version = "v1" });
@@ -57,8 +60,10 @@ namespace DatingApp2
 
             app.UseRouting();
 
-            //importante metterlo tra il routing e auth
+            //l'ordine è importante
             app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200")); 
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

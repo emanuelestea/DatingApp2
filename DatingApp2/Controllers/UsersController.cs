@@ -1,5 +1,6 @@
 ﻿using DatingApp2.Data;
 using DatingApp2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
@@ -9,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace DatingApp2.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    
+    public class UsersController : BaseApiController
     {
         private readonly DataContext _context;
         public UsersController(DataContext context)
@@ -20,6 +20,7 @@ namespace DatingApp2.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         //public ActionResult<IEnumerable<AppUser>> GetUsers() //List va anche bene al posto di IEnumerable, però offre operazioni aggiuntive (ordinare, manipolare...)
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
@@ -29,6 +30,7 @@ namespace DatingApp2.Controllers
 
         // api/users/2
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<AppUser>> GetUsers(int id) //List va anche bene al posto di IEnumerable, però offre operazioni aggiuntive (ordinare, manipolare...)
         {
             return await _context.Users.FindAsync(id);
