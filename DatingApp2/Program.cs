@@ -19,9 +19,10 @@ namespace DatingApp2
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
             var services = scope.ServiceProvider;
-            try
+            try //gestire eccezioni perchè non essendo http request non saranno  intercettate
             {
                 var context = services.GetRequiredService<DataContext>();
+                //se il db viene cancellato lo ricrea
                 await context.Database.MigrateAsync();
                 await Seed.SeedUsers(context);
             }

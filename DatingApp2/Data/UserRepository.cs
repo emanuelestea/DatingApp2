@@ -46,7 +46,7 @@ namespace DatingApp2.Data
         public async Task<AppUser> GetUserByNameAsync(string username)
         {
             return await _context.Users
-                .Include(p => p.Photos)
+                .Include(p => p.Photos) //necessario per ritrovare anche le foto
                 .SingleOrDefaultAsync(x => x.Username == username);
         }
 

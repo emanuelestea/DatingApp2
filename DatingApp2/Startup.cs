@@ -65,9 +65,9 @@ namespace DatingApp2
             //l'ordine è importante
             app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200")); 
 
-            app.UseAuthentication();
+            app.UseAuthentication(); //do you have a valid code?
 
-            app.UseAuthorization();
+            app.UseAuthorization(); //ok you have a valid code now what are you allowed to do
 
             app.UseEndpoints(endpoints =>
             {
