@@ -1,4 +1,5 @@
-﻿using DatingApp2.Data;
+﻿using AutoMapper;
+using DatingApp2.Data;
 using DatingApp2.DTO;
 using DatingApp2.Interfaces;
 using DatingApp2.Models;
@@ -19,10 +20,13 @@ namespace DatingApp2.Controllers
 
         private readonly ITokenService _tokenService;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        private readonly IMapper _mapper;
+
+        public AccountController(DataContext context, ITokenService tokenService, IMapper mapper)
         {
             _context = context;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -31,14 +35,14 @@ namespace DatingApp2.Controllers
             if (await UserExist(registerDto.Username))
                 return BadRequest("Username is taken");
 
+            var user = _mapper.Map<AppUser>(registerDto);
+
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                Username = registerDto.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.Username = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
+            
 
             _context.Users.Add(user); //registra il nuovo utente nell'entity frameword
             await _context.SaveChangesAsync(); //aggiunge effettivamente al db
@@ -47,7 +51,7 @@ namespace DatingApp2.Controllers
             {
                 Username = user.Username,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+                KnowAs = user.KnownAs
             };
         }
 
@@ -75,7 +79,8 @@ namespace DatingApp2.Controllers
             {
                 Username = user.Username,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                KnowAs = user.KnownAs
             };
         }
 
