@@ -1,4 +1,5 @@
 ﻿using DatingApp2.DTO;
+using DatingApp2.Helper;
 using DatingApp2.Models;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,8 @@ namespace DatingApp2.Interfaces
 
         Task<AppUser> GetUserByNameAsync(string name);
 
-        Task<IEnumerable<MemberDTO>> GetMembersAsync();
+        //Task<IEnumerable<MemberDTO>> GetMembersAsync();
+        Task<PagedList<MemberDTO>> GetMembersAsync(UserParams userParams);
 
         Task<MemberDTO> GetMemberAsync(string username);
     }
