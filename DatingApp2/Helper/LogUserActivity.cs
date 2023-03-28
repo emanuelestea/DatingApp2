@@ -19,7 +19,7 @@ namespace DatingApp2.Helper
             var userId = resultContext.HttpContext.User.GetUserId();
 
             var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-            var user = await repo.GetUserByIdAsync(Int32.Parse(userId));
+            var user = await repo.GetUserByIdAsync((userId));
             user.LastActive = DateTime.UtcNow;
             await repo.SaveAllAsync();
         }

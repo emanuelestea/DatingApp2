@@ -24,9 +24,7 @@ namespace DatingApp2.Models
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
 
-        /*public int GetAge()
-        {
-            return DateOfBirth.CalculateAge();
-        }*/
+        public List<UserLike> LikedByUsers { get; set; }
+        public List<UserLike> LikedUsers { get; set; }
     }
 }

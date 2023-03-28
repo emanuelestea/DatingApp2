@@ -33,12 +33,7 @@ namespace DatingApp2.Data
                 .SingleOrDefaultAsync();
         }
 
-        /*public async Task<IEnumerable<MemberDTO>> GetMembersAsync()
-        {
-            return await _context.Users
-                .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-        }*/
+   
         public async Task<PagedList<MemberDTO>> GetMembersAsync(UserParams userParams)
         {
             var query = _context.Users.AsQueryable();
@@ -60,7 +55,8 @@ namespace DatingApp2.Data
                 _ => query.OrderByDescending(u => u.LastActive)
             };
             
-            return await PagedList<MemberDTO>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDTO>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
+            return await PagedList<MemberDTO>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
+                , userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<AppUser> GetUserByIdAsync(int id)
